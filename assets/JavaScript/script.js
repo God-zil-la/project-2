@@ -25,10 +25,10 @@ let totalPairs = 0; // determined by difficulty
 
 // Easy Mode: 4 unique images for 8 cards (4 pairs)
 const easyImages = [
-  'assets/images/8-card/bird-1.png',
-  'assets/images/8-card/bird-2.png',
-  'assets/images/8-card/bird-3.png',
-  'assets/images/8-card/bird-4.png'
+  'assets/images/8-card/emoji-1.png',
+  'assets/images/8-card/emoji-2.png',
+  'assets/images/8-card/emoji-3.png',
+  'assets/images/8-card/emoji-4.png'
 ];
 
 // Normal Mode: 8 unique images for 16 cards (8 pairs)
