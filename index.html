@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Guessing Game</title>
+  <!-- Link to your CSS file in assets/styles.css folder -->
+  <link rel="stylesheet" href="assets/styles.css/styles.css" />
+</head>
+<body>
+
+  <!-- Your HTML content goes here -->
+  <header>
+    <h1>Math Guessing Game</h1>
+  </header>
+
+  <main>
+    <section class="game-container">
+      <p>I'm thinking of a number between 1 and 100. Can you guess it?</p>
+
+      <div class="input-group">
+        <label for="userGuess">Your Guess:</label>
+        <input type="number" id="userGuess" min="1" max="100" required />
+        <button id="guessBtn">Guess</button>
+      </div>
+
+      <p id="feedback" class="feedback"></p>
+      <p id="attempts" class="attempts">Attempts: 0</p>
+
+      <button id="resetBtn" class="reset-btn" style="display: none;">
+        Play Again
+      </button>
+    </section>
+  </main>
+
+  <!-- Link to your JS file in javascript folder, placed just before closing body tag -->
+  <script src="javascript/script.js"></script>
+</body>
+</html>
