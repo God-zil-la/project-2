@@ -2,48 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Essential for mobile responsiveness -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Math Guessing Game</title>
-  <!-- Link to your CSS file in assets/styles.css folder -->
-  <link rel="stylesheet" href="assets/styles.css/styles.css" />
+  <title>The memory game</title>
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="assets/styles.css/styles.css">
 </head>
 <body>
-
-  <!-- Your HTML content goes here -->
   <header>
-    <h1>Math Guessing Game</h1>
+    <h1>Do you have good memory?</h1>
   </header>
 
   <main>
-    <section class="game-container">
-      <p>I'm thinking of a number between 1 and 100. Can you guess it?</p>
+    <section class="game-info">
+      <!-- Scoreboard -->
+      <p>Moves: <span id="movesCount">0</span></p>
+      <p>Time: <span id="timeCount">0</span>s</p>
+      <!-- Difficulty selector -->
+      <label for="difficulty">Difficulty:</label>
+      <select id="difficulty">
+        <option value="8">Easy (8 cards)</option>
+        <option value="16" selected>Normal (16 cards)</option>
+        <option value="32">Hard (32 cards)</option>
+      </select>
+      <button id="resetBtn">Reset Game</button>
+    </section>
 
-      <div class="input-group">
-        <label for="userGuess">Your Guess:</label>
-        <input type="number" id="userGuess" min="1" max="100" required />
-        <button id="guessBtn">Guess</button>
-      </div>
-
-      <div class="difficulty-select">
-        <label for="difficulty">Choose Difficulty:</label>
-        <select id="difficulty">
-          <option value="50">Easy (1–50)</option>
-          <option value="100" selected>Normal (1–100)</option>
-          <option value="500">Hard (1–500)</option>
-        </select>
-      </div>
-      
-
-      <p id="feedback" class="feedback"></p>
-      <p id="attempts" class="attempts">Attempts: 0</p>
-
-      <button id="resetBtn" class="reset-btn" style="display: none;">
-        Play Again
-      </button>
+    <!-- Game container for cards -->
+    <section class="game-container" id="gameContainer">
+      <!-- Cards will be generated dynamically -->
     </section>
   </main>
 
-  <!-- Link to your JS file in javascript folder, placed just before closing body tag -->
-  <script src="javascript/script.js"></script>
+  <!-- Link to external JS -->
+  <script src="assets/JavaScript/script.js"></script>
 </body>
 </html>

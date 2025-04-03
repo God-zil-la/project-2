@@ -1,97 +1,170 @@
-/* Global Styles */
-body {
+/* =======================================================
+   GLOBAL RESET & BASE STYLES (Mobile-First)
+======================================================= */
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Header */
+body {
+  font-family: sans-serif;
+  background: #f4f4f4;
+  /* Remove centering so full width can be used on desktop */
+  /* Instead, we'll center only specific elements like header */
+  width: 100%;
+}
+
 header {
   width: 100%;
   background: #2b2f77;
   color: #fff;
+  text-align: center;
   padding: 1rem;
-  text-align: center;
+  margin-bottom: 1rem;
 }
 
-/* Main Container */
-.game-container {
-  background: #fff;
-  border-radius: 5px;
-  padding: 2rem;
-  margin: 2rem 1rem;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+/* Game Info Area: Scoreboard, Difficulty Selector, Reset Button */
+.game-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
 }
-
-.difficulty-select {
-  margin: 1rem 0;
+.game-info p {
+  font-size: 1rem;
 }
-
-.difficulty-select label {
-  font-weight: bold;
-  margin-right: 0.5rem;
-}
-
-
-/* Input Group */
-.input-group {
-  margin: 1rem 0;
-}
-
-.input-group label {
-  margin-right: 0.5rem;
+.game-info label {
   font-weight: bold;
 }
-
-.input-group input {
-  width: 80px;
+.game-info select {
   padding: 0.3rem;
-  text-align: center;
-  margin-right: 0.5rem;
+  font-size: 1rem;
 }
-
-.input-group button {
+.game-info button {
   padding: 0.5rem 1rem;
+  font-size: 1rem;
   background: #fbc531;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
 }
-
-.input-group button:hover {
+.game-info button:hover {
   background: #e1ab25;
 }
 
-/* Feedback and Attempts */
-.feedback {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 1rem 0;
+/* =======================================================
+   GAME CONTAINER & CARD GRID (Fluid on Mobile/Tablet)
+======================================================= */
+.game-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  /* No max-width here so on mobile it fills available width */
 }
 
-.attempts {
-  font-style: italic;
-  margin-bottom: 1rem;
-}
-
-/* Reset Button */
-.reset-btn {
-  padding: 0.5rem 1rem;
-  background: #2b2f77;
-  color: #fff;
-  border: none;
+/* Card Styles */
+.card {
+  background: #ccc;
+  border: 2px solid #333;
   border-radius: 4px;
+  width: 100%;
+  height: 100px; /* Mobile card height */
+  position: relative;
+  perspective: 1000px;
   cursor: pointer;
 }
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  backface-visibility: hidden;
+}
+.card-front {
+  background: #ccc;
+}
+.card-back {
+  transform: rotateY(180deg);
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #2b2f77;
+}
+.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+.matched {
+  opacity: 0.7;
+  cursor: default;
+}
+.timer,
+.moves {
+  font-weight: bold;
+  font-size: 1rem;
+}
 
-.reset-btn:hover {
-  background: #1f2354;
+/* =======================================================
+   MEDIA QUERIES
+======================================================= */
+
+/* Tablet (≥768px): Increase grid min cell size and card height */
+@media (min-width: 768px) {
+  .game-container {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  .card {
+    height: 120px;
+  }
+  .game-info p {
+    font-size: 1.1rem;
+  }
+}
+
+/* Desktop (≥1200px): Full width container with fixed column counts */
+@media (min-width: 1200px) {
+  /* Allow the container to fill the entire viewport width */
+  .game-container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 1rem;
+  }
+  .game-info p {
+    font-size: 1.2rem;
+  }
+  /* Desktop layout: adjust grid based on difficulty */
+  /* Easy mode: 8 cards → 4 columns (2 rows) */
+  .game-container.easy-desktop {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  /* Normal mode: 16 cards → 8 columns (2 rows) */
+  /* Hard mode: 32 cards → 8 columns (4 rows) */
+  .game-container.normal-desktop,
+  .game-container.hard-desktop {
+    grid-template-columns: repeat(8, 1fr);
+  }
+  /* Make cards square by using aspect ratio */
+  .card {
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+}
+
+/* Very Large Desktop (≥1920px): Optional adjustments */
+@media (min-width: 1920px) {
+  .game-info p {
+    font-size: 1.3rem;
+  }
+  /* Cards remain square; grid will auto-adjust if container expands */
 }
