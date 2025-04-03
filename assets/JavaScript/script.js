@@ -33,14 +33,14 @@ const easyImages = [
 
 // Normal Mode: 8 unique images for 16 cards (8 pairs)
 const normalImages = [
-  'assets/images/16-card/bird-1.png',
-  'assets/images/16-card/bird-2.png',
-  'assets/images/16-card/bird-3.png',
-  'assets/images/16-card/bird-4.png',
-  'assets/images/16-card/bird-5.png',
-  'assets/images/16-card/bird-6.png',
-  'assets/images/16-card/bird-7.png',
-  'assets/images/16-card/bird-8.png'
+  'assets/images/16-card/emoji-1.png',
+  'assets/images/16-card/emoji-2.png',
+  'assets/images/16-card/emoji-3.png',
+  'assets/images/16-card/emoji-4.png',
+  'assets/images/16-card/emoji-5.png',
+  'assets/images/16-card/emoji-6.png',
+  'assets/images/16-card/emoji-7.png',
+  'assets/images/16-card/emoji-8.png'
 ];
 
 // Hard Mode: 16 unique images for 32 cards (16 pairs)
