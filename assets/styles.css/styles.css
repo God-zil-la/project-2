@@ -30,6 +30,16 @@ header {
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+.difficulty-select {
+  margin: 1rem 0;
+}
+
+.difficulty-select label {
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+
 /* Input Group */
 .input-group {
   margin: 1rem 0;

@@ -58,3 +58,26 @@ resetBtn.addEventListener("click", function () {
   attemptsDisplay.textContent = "Attempts: 0";
   resetBtn.style.display = "none";
 });
+const difficultySelect = document.getElementById("difficulty");
+let maxNumber = parseInt(difficultySelect.value, 10); // default based on the select
+
+// Update the random number logic to use maxNumber
+let randomNumber = Math.floor(Math.random() * maxNumber) + 1;
+
+// On difficulty change, reset the game
+difficultySelect.addEventListener("change", () => {
+  maxNumber = parseInt(difficultySelect.value, 10);
+  resetGame();
+});
+
+// Reuse or adapt your reset function:
+function resetGame() {
+  randomNumber = Math.floor(Math.random() * maxNumber) + 1;
+  attempts = 0;
+  gameActive = true;
+  userGuess.value = "";
+  feedback.textContent = "";
+  feedback.style.color = "#333";
+  attemptsDisplay.textContent = "Attempts: 0";
+  resetBtn.style.display = "none";
+}
