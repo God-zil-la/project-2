@@ -9,48 +9,73 @@
 
 body {
   font-family: sans-serif;
-  background: #f4f4f4;
-  /* Remove centering so full width can be used on desktop */
-  /* Instead, we'll center only specific elements like header */
+  background-image: url('https://via.placeholder.com/1920x1080');
+  background-size: cover;
+  background-position: center;
   width: 100%;
+  color: orangered;
+  padding: 1rem;
 }
 
+/* =======================================================
+   HEADER & GAME INFO (Now Combined)
+======================================================= */
 header {
-  width: 100%;
-  background: #2b2f77;
-  color: #fff;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  background: lightgray;
+  color: orangered;
   text-align: center;
   padding: 1rem;
-  margin-bottom: 1rem;
+  border: 4px solid lightgray;
 }
 
-/* Game Info Area: Scoreboard, Difficulty Selector, Reset Button */
+header h1 {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Game Info inside Header */
 .game-info {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
+
 .game-info p {
-  font-size: 1rem;
+  font-weight: bold;
+  font-size: 2rem;
+  margin: 0rem;
+  color: orangered;  /* White text in header for contrast */
 }
+
 .game-info label {
   font-weight: bold;
+  font-size: 2rem;
+  color: orangered;
 }
+
 .game-info select {
   padding: 0.3rem;
-  font-size: 1rem;
+  font-size: 1.8rem;
 }
+
 .game-info button {
   padding: 0.5rem 1rem;
-  font-size: 1rem;
-  background: #fbc531;
+  font-size: 1.8rem;
+  background: orangered;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
+
 .game-info button:hover {
   background: #e1ab25;
 }
@@ -64,12 +89,13 @@ header {
   gap: 1rem;
   width: 100%;
   padding: 1rem;
-  /* No max-width here so on mobile it fills available width */
 }
 
-/* Card Styles */
+/* =======================================================
+   CARD STYLES
+======================================================= */
 .card {
-  background: #ccc;
+  background: orangered;
   border: 2px solid #333;
   border-radius: 4px;
   width: 100%;
@@ -78,12 +104,14 @@ header {
   perspective: 1000px;
   cursor: pointer;
 }
+
 .card-inner {
   width: 100%;
   height: 100%;
   transition: transform 0.6s;
   transform-style: preserve-3d;
 }
+
 .card-front,
 .card-back {
   position: absolute;
@@ -92,22 +120,27 @@ header {
   border-radius: 4px;
   backface-visibility: hidden;
 }
+
 .card-front {
-  background: #ccc;
+  background: url('/assets/images/background-4.jpg') no-repeat center center/cover !important;
 }
+
 .card-back {
   transform: rotateY(180deg);
   background-size: cover;
   background-position: center;
   border: 2px solid #2b2f77;
 }
+
 .flipped .card-inner {
   transform: rotateY(180deg);
 }
+
 .matched {
   opacity: 0.7;
   cursor: default;
 }
+
 .timer,
 .moves {
   font-weight: bold;
@@ -118,7 +151,7 @@ header {
    MEDIA QUERIES
 ======================================================= */
 
-/* Tablet (≥768px): Increase grid min cell size and card height */
+/* Tablet (≥768px): Increase grid cell size and card height */
 @media (min-width: 768px) {
   .game-container {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -127,13 +160,12 @@ header {
     height: 120px;
   }
   .game-info p {
-    font-size: 1.1rem;
+    font-size: 2.2rem;
   }
 }
 
 /* Desktop (≥1200px): Full width container with fixed column counts */
 @media (min-width: 1200px) {
-  /* Allow the container to fill the entire viewport width */
   .game-container {
     width: 100%;
     max-width: none;
@@ -141,7 +173,7 @@ header {
     padding: 1rem;
   }
   .game-info p {
-    font-size: 1.2rem;
+    font-size: 2rem;
   }
   /* Desktop layout: adjust grid based on difficulty */
   /* Easy mode: 8 cards → 4 columns (2 rows) */
@@ -154,17 +186,17 @@ header {
   .game-container.hard-desktop {
     grid-template-columns: repeat(8, 1fr);
   }
-  /* Make cards square by using aspect ratio */
+  /* Make cards square using aspect ratio */
   .card {
     aspect-ratio: 1 / 1;
     height: auto;
   }
 }
 
-/* Very Large Desktop (≥1920px): Optional adjustments */
+/* Very Large Desktop (≥1920px) */
 @media (min-width: 1920px) {
   .game-info p {
-    font-size: 1.3rem;
+    font-size: 3.5rem;
   }
   /* Cards remain square; grid will auto-adjust if container expands */
 }

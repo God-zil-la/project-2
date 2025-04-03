@@ -4,21 +4,26 @@
   <meta charset="UTF-8" />
   <!-- Essential for mobile responsiveness -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>The memory game</title>
-  <!-- Link to external CSS -->
+  <title>Memory Game</title>
   <link rel="stylesheet" href="assets/styles.css/styles.css">
 </head>
 <body>
   <header>
-    <h1>Do you have good memory?</h1>
-  </header>
+    <h1>Memory Game</h1>
 
-  <main>
-    <section class="game-info">
-      <!-- Scoreboard -->
+    <style>
+        body {
+          background-image: url('assets/images/background.jpg') !important;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+      </style>
+      
+    <!-- Game Info now moved into the header -->
+    <div class="game-info">
       <p>Moves: <span id="movesCount">0</span></p>
       <p>Time: <span id="timeCount">0</span>s</p>
-      <!-- Difficulty selector -->
       <label for="difficulty">Difficulty:</label>
       <select id="difficulty">
         <option value="8">Easy (8 cards)</option>
@@ -26,15 +31,15 @@
         <option value="32">Hard (32 cards)</option>
       </select>
       <button id="resetBtn">Reset Game</button>
-    </section>
+    </div>
+  </header>
 
-    <!-- Game container for cards -->
+  <main>
     <section class="game-container" id="gameContainer">
-      <!-- Cards will be generated dynamically -->
+      <!-- Cards will be generated dynamically via JavaScript -->
     </section>
   </main>
 
-  <!-- Link to external JS -->
   <script src="assets/JavaScript/script.js"></script>
 </body>
 </html>
