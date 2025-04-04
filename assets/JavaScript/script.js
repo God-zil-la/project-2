@@ -1,11 +1,12 @@
 // =========================
-// Memory Game JavaScript
+// Memory Game JavaScript with Best Time Record
 // =========================
 
 // Select DOM elements
 const gameContainer = document.getElementById('gameContainer');
 const movesCountElem = document.getElementById('movesCount');
 const timeCountElem = document.getElementById('timeCount');
+const bestRecordElem = document.getElementById('bestRecord'); // New element for best record display
 const resetBtn = document.getElementById('resetBtn');
 const difficultySelect = document.getElementById('difficulty');
 
@@ -20,7 +21,7 @@ let matchedPairs = 0;
 let totalPairs = 0; // determined by difficulty
 
 // ---------------------------
-// Define image arrays for each difficulty
+// Image arrays for each difficulty
 // ---------------------------
 
 // Easy Mode: 4 unique images for 8 cards (4 pairs)
@@ -64,7 +65,7 @@ const hardImages = [
 ];
 
 // ---------------------------
-// Helper function: Shuffle array (Fisher-Yates)
+// Helper: Shuffle Array (Fisher-Yates)
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -80,21 +81,16 @@ function generateCards(totalCards) {
   let values = [];
   
   if (totalCards === 8) {
-    // Easy mode: use easyImages (4 unique images)
     values = easyImages.slice(0, totalPairs);
   } else if (totalCards === 16) {
-    // Normal mode: use normalImages (8 unique images)
     values = normalImages.slice(0, totalPairs);
   } else if (totalCards === 32) {
-    // Hard mode: use hardImages (16 unique images)
     values = hardImages.slice(0, totalPairs);
   } else {
-    // Fallback: use easyImages if an unexpected value is given
     values = easyImages.slice(0, totalPairs);
   }
   
-  // Duplicate to form pairs and shuffle the combined array
-  let cardValues = values.concat(values);
+  let cardValues = values.concat(values); // duplicate for pairs
   return shuffleArray(cardValues);
 }
 
@@ -114,7 +110,7 @@ function renderCards(cardValues) {
     
     const cardBack = document.createElement('div');
     cardBack.classList.add('card-back');
-    // Set the background image to the image file
+    // Set the background image using the provided value
     cardBack.style.backgroundImage = `url('${value}')`;
     cardBack.style.backgroundSize = 'cover';
     cardBack.style.backgroundPosition = 'center';
@@ -130,7 +126,7 @@ function renderCards(cardValues) {
 }
 
 // ---------------------------
-// Flip card logic
+// Card flip logic
 function flipCard(card) {
   if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
   
@@ -160,6 +156,7 @@ function checkForMatch() {
       clearInterval(timer);
       setTimeout(() => {
         alert(`You win! Moves: ${movesCount}, Time: ${timeElapsed}s`);
+        updateBestTime();
       }, 500);
     }
   } else {
@@ -191,11 +188,41 @@ function startTimer() {
 }
 
 // ---------------------------
+// Best Time Functions
+// Uses localStorage with keys based on difficulty (8, 16, or 32)
+function updateBestTime() {
+  const difficulty = difficultySelect.value;
+  const bestTimeKey = `bestTime-${difficulty}`;
+  const bestNameKey = `bestName-${difficulty}`;
+  const storedBestTime = localStorage.getItem(bestTimeKey);
+  
+  if (!storedBestTime || timeElapsed < parseInt(storedBestTime)) {
+    // New record achieved
+    const playerName = prompt("New Record! Enter your name:");
+    localStorage.setItem(bestTimeKey, timeElapsed);
+    localStorage.setItem(bestNameKey, playerName);
+    alert(`New record set by ${playerName} with ${timeElapsed} seconds!`);
+  }
+  
+  displayBestTime();
+}
+
+function displayBestTime() {
+  const difficulty = difficultySelect.value;
+  const bestTimeKey = `bestTime-${difficulty}`;
+  const bestNameKey = `bestName-${difficulty}`;
+  const storedBestTime = localStorage.getItem(bestTimeKey);
+  const storedBestName = localStorage.getItem(bestNameKey);
+  
+  if (storedBestTime && storedBestName) {
+    bestRecordElem.textContent = `Best: ${storedBestTime}s by ${storedBestName}`;
+  } else {
+    bestRecordElem.textContent = `Best: N/A`;
+  }
+}
+
+// ---------------------------
 // Desktop layout adjustments
-// On desktop (≥1200px), we want fixed column counts.
-// Easy: 8 cards → 2 rows x 4 columns (class: easy-desktop)
-// Normal: 16 cards → 2 rows x 8 columns (class: normal-desktop)
-// Hard: 32 cards → 4 rows x 8 columns (class: hard-desktop)
 function applyDesktopLayout(totalCards) {
   gameContainer.classList.remove('easy-desktop', 'normal-desktop', 'hard-desktop');
   
@@ -220,7 +247,10 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  // Get total number of cards from the difficulty selector (8, 16, or 32)
+  // Display best record for current difficulty
+  displayBestTime();
+  
+  // Get total cards from difficulty selector (8, 16, or 32)
   const totalCards = parseInt(difficultySelect.value, 10);
   const cardValues = generateCards(totalCards);
   renderCards(cardValues);
@@ -237,5 +267,5 @@ window.addEventListener('resize', () => {
 difficultySelect.addEventListener('change', initGame);
 resetBtn.addEventListener('click', initGame);
 
-// Start the game when the DOM is fully loaded
+// Start the game on DOM load
 window.addEventListener('DOMContentLoaded', initGame);
