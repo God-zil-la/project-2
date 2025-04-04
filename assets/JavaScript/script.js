@@ -1,12 +1,13 @@
 // =========================
-// Memory Game JavaScript with Best Time Record
+// Memory Game JavaScript with Live Best Name Record
 // =========================
 
 // Select DOM elements
 const gameContainer = document.getElementById('gameContainer');
 const movesCountElem = document.getElementById('movesCount');
 const timeCountElem = document.getElementById('timeCount');
-const bestRecordElem = document.getElementById('bestRecord'); // New element for best record display
+const bestRecordElem = document.getElementById('bestRecord');
+const bestNameInput = document.getElementById('bestNameInput'); // new input element
 const resetBtn = document.getElementById('resetBtn');
 const difficultySelect = document.getElementById('difficulty');
 
@@ -21,7 +22,7 @@ let matchedPairs = 0;
 let totalPairs = 0; // determined by difficulty
 
 // ---------------------------
-// Image arrays for each difficulty
+// Define image arrays for each difficulty
 // ---------------------------
 
 // Easy Mode: 4 unique images for 8 cards (4 pairs)
@@ -65,7 +66,7 @@ const hardImages = [
 ];
 
 // ---------------------------
-// Helper: Shuffle Array (Fisher-Yates)
+// Helper function: Shuffle array (Fisher-Yates)
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -90,7 +91,7 @@ function generateCards(totalCards) {
     values = easyImages.slice(0, totalPairs);
   }
   
-  let cardValues = values.concat(values); // duplicate for pairs
+  let cardValues = values.concat(values);
   return shuffleArray(cardValues);
 }
 
@@ -110,7 +111,6 @@ function renderCards(cardValues) {
     
     const cardBack = document.createElement('div');
     cardBack.classList.add('card-back');
-    // Set the background image using the provided value
     cardBack.style.backgroundImage = `url('${value}')`;
     cardBack.style.backgroundSize = 'cover';
     cardBack.style.backgroundPosition = 'center';
@@ -188,7 +188,7 @@ function startTimer() {
 }
 
 // ---------------------------
-// Best Time Functions
+// Best Time Functions (Live Best Score Name Update)
 // Uses localStorage with keys based on difficulty (8, 16, or 32)
 function updateBestTime() {
   const difficulty = difficultySelect.value;
@@ -196,15 +196,21 @@ function updateBestTime() {
   const bestNameKey = `bestName-${difficulty}`;
   const storedBestTime = localStorage.getItem(bestTimeKey);
   
+  // Check if new record is set
   if (!storedBestTime || timeElapsed < parseInt(storedBestTime)) {
-    // New record achieved
-    const playerName = prompt("New Record! Enter your name:");
-    localStorage.setItem(bestTimeKey, timeElapsed);
-    localStorage.setItem(bestNameKey, playerName);
-    alert(`New record set by ${playerName} with ${timeElapsed} seconds!`);
+    // New record: reveal the input field for the user to enter their name
+    bestNameInput.style.display = 'block';
+    bestNameInput.value = ''; // Clear previous input
+    bestNameInput.focus();
+    // Add event listener for live update (remove any previous listener first)
+    bestNameInput.oninput = function() {
+      localStorage.setItem(bestTimeKey, timeElapsed);
+      localStorage.setItem(bestNameKey, bestNameInput.value);
+      displayBestTime();
+    };
+  } else {
+    displayBestTime();
   }
-  
-  displayBestTime();
 }
 
 function displayBestTime() {
@@ -219,6 +225,8 @@ function displayBestTime() {
   } else {
     bestRecordElem.textContent = `Best: N/A`;
   }
+  // Hide the input field after updating
+  bestNameInput.style.display = 'none';
 }
 
 // ---------------------------
@@ -247,8 +255,7 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  // Display best record for current difficulty
-  displayBestTime();
+  displayBestTime(); // Update best record display
   
   // Get total cards from difficulty selector (8, 16, or 32)
   const totalCards = parseInt(difficultySelect.value, 10);
@@ -267,5 +274,5 @@ window.addEventListener('resize', () => {
 difficultySelect.addEventListener('change', initGame);
 resetBtn.addEventListener('click', initGame);
 
-// Start the game on DOM load
+// Start the game when the DOM is fully loaded
 window.addEventListener('DOMContentLoaded', initGame);
