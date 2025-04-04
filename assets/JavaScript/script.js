@@ -213,15 +213,34 @@ function startTimer() {
 // =========================
 // Best Time Functions (RTDB Integration with Live Name Update)
 // =========================
+// Listen for high score changes in realtime
+function listenForHighScore() {
+  const difficulty = difficultySelect.value;
+  const scoreRef = dbRT.ref('highscores/' + difficulty);
+
+  // Remove any previous listener (optional if you expect changes)
+  scoreRef.off();
+
+  // Set up a realtime listener
+  scoreRef.on('value', snapshot => {
+    const data = snapshot.val();
+    if (data) {
+      bestRecordElem.textContent = `Best: ${data.score}s by ${data.name}`;
+    } else {
+      bestRecordElem.textContent = "Best: N/A";
+    }
+  }, error => {
+    console.error("Error listening for high score:", error);
+  });
+}
+
 function updateBestTime() {
   const difficulty = difficultySelect.value;
   const scoreRef = dbRT.ref('highscores/' + difficulty);
   
   scoreRef.once('value').then(snapshot => {
     const data = snapshot.val();
-    // If no record exists or current time is better (lower)
     if (!data || timeElapsed < data.score) {
-      // Show live input field for best name update
       bestNameInput.style.display = 'block';
       bestNameInput.value = '';
       bestNameInput.focus();
@@ -238,7 +257,6 @@ function bestNameInputHandler() {
   const difficulty = difficultySelect.value;
   const scoreRef = dbRT.ref('highscores/' + difficulty);
   
-  // Save the new best score and name as the user types
   scoreRef.set({
     name: bestNameInput.value,
     score: timeElapsed,
@@ -297,7 +315,11 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  displayHighScore(); // Update best score display
+  // Start listening for high score changes
+  listenForHighScore();
+  
+  // Display the best score for the current difficulty
+  displayHighScore();
   
   const totalCards = parseInt(difficultySelect.value, 10);
   const cardValues = generateCards(totalCards);
