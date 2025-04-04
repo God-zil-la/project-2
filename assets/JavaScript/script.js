@@ -189,28 +189,38 @@ function startTimer() {
 
 // ---------------------------
 // Best Time Functions (Live Best Score Name Update)
-// Uses localStorage with keys based on difficulty (8, 16, or 32)
+// ---------------------------
+
 function updateBestTime() {
   const difficulty = difficultySelect.value;
   const bestTimeKey = `bestTime-${difficulty}`;
   const bestNameKey = `bestName-${difficulty}`;
   const storedBestTime = localStorage.getItem(bestTimeKey);
-  
-  // Check if new record is set
+
+  // If no record exists or current time is lower, prompt for new record
   if (!storedBestTime || timeElapsed < parseInt(storedBestTime)) {
-    // New record: reveal the input field for the user to enter their name
+    // New record: show the best name input field
     bestNameInput.style.display = 'block';
-    bestNameInput.value = ''; // Clear previous input
+    bestNameInput.value = ''; // Clear any previous input
     bestNameInput.focus();
-    // Add event listener for live update (remove any previous listener first)
-    bestNameInput.oninput = function() {
-      localStorage.setItem(bestTimeKey, timeElapsed);
-      localStorage.setItem(bestNameKey, bestNameInput.value);
-      displayBestTime();
-    };
+    
+    // Remove any existing listener to avoid duplicate events
+    bestNameInput.removeEventListener('input', bestNameInputHandler);
+    bestNameInput.addEventListener('input', bestNameInputHandler);
   } else {
     displayBestTime();
   }
+}
+
+function bestNameInputHandler() {
+  const difficulty = difficultySelect.value;
+  const bestTimeKey = `bestTime-${difficulty}`;
+  const bestNameKey = `bestName-${difficulty}`;
+
+  // Save the new record and name live as the user types
+  localStorage.setItem(bestTimeKey, timeElapsed);
+  localStorage.setItem(bestNameKey, bestNameInput.value);
+  displayBestTime();
 }
 
 function displayBestTime() {
@@ -225,54 +235,6 @@ function displayBestTime() {
   } else {
     bestRecordElem.textContent = `Best: N/A`;
   }
-  // Hide the input field after updating
+  // Hide the input field after updating the record
   bestNameInput.style.display = 'none';
 }
-
-// ---------------------------
-// Desktop layout adjustments
-function applyDesktopLayout(totalCards) {
-  gameContainer.classList.remove('easy-desktop', 'normal-desktop', 'hard-desktop');
-  
-  if (window.innerWidth >= 1200) {
-    if (totalCards === 8) {
-      gameContainer.classList.add('easy-desktop');
-    } else if (totalCards === 16) {
-      gameContainer.classList.add('normal-desktop');
-    } else if (totalCards === 32) {
-      gameContainer.classList.add('hard-desktop');
-    }
-  }
-}
-
-// ---------------------------
-// Initialize the game
-function initGame() {
-  movesCount = 0;
-  movesCountElem.textContent = movesCount;
-  matchedPairs = 0;
-  resetSelections();
-  clearInterval(timer);
-  startTimer();
-  
-  displayBestTime(); // Update best record display
-  
-  // Get total cards from difficulty selector (8, 16, or 32)
-  const totalCards = parseInt(difficultySelect.value, 10);
-  const cardValues = generateCards(totalCards);
-  renderCards(cardValues);
-  applyDesktopLayout(totalCards);
-}
-
-// Reapply desktop layout on window resize (optional)
-window.addEventListener('resize', () => {
-  const totalCards = parseInt(difficultySelect.value, 10);
-  applyDesktopLayout(totalCards);
-});
-
-// Event listeners for difficulty change and reset button
-difficultySelect.addEventListener('change', initGame);
-resetBtn.addEventListener('click', initGame);
-
-// Start the game when the DOM is fully loaded
-window.addEventListener('DOMContentLoaded', initGame);
