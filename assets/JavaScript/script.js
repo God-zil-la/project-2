@@ -1,32 +1,35 @@
 // =========================
-// Memory Game JavaScript with Live Best Name Record
+// Firebase Initialization (Compat SDK)
 // =========================
 
-// Firebase configuration (update with your actual config)
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBJ4xlHJ-gw1i-njOeuoX5shRtJ6G7vg8I",
   authDomain: "memory-b0d16.firebaseapp.com",
   projectId: "memory-b0d16",
-  storageBucket: "memory-b0d16.appspot.com",
+  storageBucket: "memory-b0d16.appspot.com",  // Ensure this is correct!
   messagingSenderId: "1081029476081",
   appId: "1:1081029476081:web:0678dc8a912cd8f202b350",
   measurementId: "G-PXM46CJPCW"
 };
 
-// Initialize Firebase using the compat libraries
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Select DOM elements
+// =========================
+// Select DOM Elements
+// =========================
 const gameContainer = document.getElementById('gameContainer');
 const movesCountElem = document.getElementById('movesCount');
 const timeCountElem = document.getElementById('timeCount');
 const bestRecordElem = document.getElementById('bestRecord');
-const bestNameInput = document.getElementById('bestNameInput'); // new input element
+const bestNameInput = document.getElementById('bestNameInput'); // Input for live best name update
 const resetBtn = document.getElementById('resetBtn');
 const difficultySelect = document.getElementById('difficulty');
 
-// Global game variables
+// =========================
+// Global Game Variables
+// =========================
 let movesCount = 0;
 let timer;
 let timeElapsed = 0;
@@ -34,12 +37,11 @@ let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
 let matchedPairs = 0;
-let totalPairs = 0; // determined by difficulty
+let totalPairs = 0; // Set based on selected difficulty
 
-// ---------------------------
-// Define image arrays for each difficulty
-// ---------------------------
-
+// =========================
+// Image Arrays for Each Difficulty
+// =========================
 // Easy Mode: 4 unique images for 8 cards (4 pairs)
 const easyImages = [
   'assets/images/8-card/emoji-1.png',
@@ -80,8 +82,9 @@ const hardImages = [
   'assets/images/32-card/emoji-16.png'
 ];
 
-// ---------------------------
-// Helper function: Shuffle array (Fisher-Yates)
+// =========================
+// Helper Function: Shuffle Array (Fisher-Yates)
+// =========================
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -90,12 +93,12 @@ function shuffleArray(array) {
   return array;
 }
 
-// ---------------------------
-// Generate cards based on difficulty (totalCards: 8, 16, or 32)
+// =========================
+// Generate Cards Based on Difficulty (8, 16, or 32 cards)
+// =========================
 function generateCards(totalCards) {
   totalPairs = totalCards / 2;
   let values = [];
-  
   if (totalCards === 8) {
     values = easyImages.slice(0, totalPairs);
   } else if (totalCards === 16) {
@@ -105,13 +108,13 @@ function generateCards(totalCards) {
   } else {
     values = easyImages.slice(0, totalPairs);
   }
-  
-  let cardValues = values.concat(values);
+  let cardValues = values.concat(values); // Duplicate for pairs
   return shuffleArray(cardValues);
 }
 
-// ---------------------------
-// Render cards into the game container
+// =========================
+// Render Cards into the Game Container
+// =========================
 function renderCards(cardValues) {
   gameContainer.innerHTML = '';
   cardValues.forEach(value => {
@@ -140,8 +143,9 @@ function renderCards(cardValues) {
   });
 }
 
-// ---------------------------
-// Card flip logic
+// =========================
+// Card Flip Logic
+// =========================
 function flipCard(card) {
   if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
   
@@ -190,8 +194,9 @@ function resetSelections() {
   lockBoard = false;
 }
 
-// ---------------------------
-// Timer functions
+// =========================
+// Timer Functions
+// =========================
 function startTimer() {
   clearInterval(timer);
   timeElapsed = 0;
@@ -202,53 +207,82 @@ function startTimer() {
   }, 1000);
 }
 
-// ---------------------------
-// Best Time Functions (Live Best Score Name Update)
-// Uses localStorage with keys based on difficulty (8, 16, or 32)
+// =========================
+// Best Time Functions with Live Name Update (Firebase Integrated)
+// =========================
 function updateBestTime() {
   const difficulty = difficultySelect.value;
-  const bestTimeKey = `bestTime-${difficulty}`;
-  const bestNameKey = `bestName-${difficulty}`;
-  const storedBestTime = localStorage.getItem(bestTimeKey);
+  const docId = difficulty; // Use difficulty as document ID for simplicity
+  const highScoreRef = db.collection('highscores').doc(docId);
   
-  // Check if new record is set
-  if (!storedBestTime || timeElapsed < parseInt(storedBestTime)) {
-    // New record: reveal the input field for the user to enter their name
-    bestNameInput.style.display = 'block';
-    bestNameInput.value = ''; // Clear previous input
-    bestNameInput.focus();
-    // Add event listener for live update (remove any previous listener first)
-    bestNameInput.oninput = function() {
-      localStorage.setItem(bestTimeKey, timeElapsed);
-      localStorage.setItem(bestNameKey, bestNameInput.value);
-      displayBestTime();
-    };
-  } else {
+  highScoreRef.get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      if (!data.score || timeElapsed < data.score) {
+        // New record: show input field for live name update
+        bestNameInput.style.display = 'block';
+        bestNameInput.value = '';
+        bestNameInput.focus();
+        bestNameInput.addEventListener('input', bestNameInputHandler);
+      } else {
+        displayBestTime();
+      }
+    } else {
+      // No record exists, so prompt for a new record
+      bestNameInput.style.display = 'block';
+      bestNameInput.value = '';
+      bestNameInput.focus();
+      bestNameInput.addEventListener('input', bestNameInputHandler);
+    }
+  }).catch(error => {
+    console.error("Error fetching high score:", error);
+  });
+}
+
+function bestNameInputHandler() {
+  const difficulty = difficultySelect.value;
+  const docId = difficulty;
+  const highScoreRef = db.collection('highscores').doc(docId);
+  
+  // Save the new best score and name live as the user types
+  highScoreRef.set({
+    name: bestNameInput.value,
+    score: timeElapsed,
+    difficulty: difficulty,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
     displayBestTime();
-  }
+  }).catch(error => {
+    console.error("Error updating best score:", error);
+  });
+  
+  // Optionally remove the listener after update (if not needed continuously)
+  bestNameInput.removeEventListener('input', bestNameInputHandler);
 }
 
 function displayBestTime() {
   const difficulty = difficultySelect.value;
-  const bestTimeKey = `bestTime-${difficulty}`;
-  const bestNameKey = `bestName-${difficulty}`;
-  const storedBestTime = localStorage.getItem(bestTimeKey);
-  const storedBestName = localStorage.getItem(bestNameKey);
+  const docId = difficulty;
+  const highScoreRef = db.collection('highscores').doc(docId);
   
-  if (storedBestTime && storedBestName) {
-    bestRecordElem.textContent = `Best: ${storedBestTime}s by ${storedBestName}`;
-  } else {
-    bestRecordElem.textContent = `Best: N/A`;
-  }
-  // Hide the input field after updating
-  bestNameInput.style.display = 'none';
+  highScoreRef.get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      bestRecordElem.textContent = `Best: ${data.score}s by ${data.name}`;
+    } else {
+      bestRecordElem.textContent = "Best: N/A";
+    }
+    bestNameInput.style.display = 'none';
+  }).catch(error => {
+    console.error("Error displaying best score:", error);
+  });
 }
 
-// ---------------------------
-// Desktop layout adjustments
+// =========================
+// Desktop Layout Adjustments
+// =========================
 function applyDesktopLayout(totalCards) {
   gameContainer.classList.remove('easy-desktop', 'normal-desktop', 'hard-desktop');
-  
   if (window.innerWidth >= 1200) {
     if (totalCards === 8) {
       gameContainer.classList.add('easy-desktop');
@@ -260,8 +294,9 @@ function applyDesktopLayout(totalCards) {
   }
 }
 
-// ---------------------------
-// Initialize the game
+// =========================
+// Initialize the Game
+// =========================
 function initGame() {
   movesCount = 0;
   movesCountElem.textContent = movesCount;
@@ -270,16 +305,16 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  displayBestTime(); // Update best record display
+  // Display the best score for the current difficulty
+  displayBestTime();
   
-  // Get total cards from difficulty selector (8, 16, or 32)
   const totalCards = parseInt(difficultySelect.value, 10);
   const cardValues = generateCards(totalCards);
   renderCards(cardValues);
   applyDesktopLayout(totalCards);
 }
 
-// Reapply desktop layout on window resize (optional)
+// Reapply desktop layout on window resize
 window.addEventListener('resize', () => {
   const totalCards = parseInt(difficultySelect.value, 10);
   applyDesktopLayout(totalCards);
