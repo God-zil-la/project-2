@@ -1,20 +1,23 @@
 // =========================
-// Firebase Initialization (Compat SDK)
+// Firebase Initialization (RTDB Version using Compat SDK)
 // =========================
+// Include these scripts in your index.html before script.js:
+// <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+// <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBJ4xlHJ-gw1i-njOeuoX5shRtJ6G7vg8I",
   authDomain: "memory-b0d16.firebaseapp.com",
   projectId: "memory-b0d16",
-  storageBucket: "memory-b0d16.appspot.com",  // Ensure this is correct!
+  storageBucket: "memory-b0d16.appspot.com",
   messagingSenderId: "1081029476081",
   appId: "1:1081029476081:web:0678dc8a912cd8f202b350",
-  measurementId: "G-PXM46CJPCW"
+  measurementId: "G-PXM46CJPCW",
+  // Add the correct database URL:
+  databaseURL: "https://memory-b0d16-default-rtdb.europe-west1.firebasedatabase.app"
 };
-
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const dbRT = firebase.database(); // Realtime Database
 
 // =========================
 // Select DOM Elements
@@ -37,7 +40,7 @@ let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
 let matchedPairs = 0;
-let totalPairs = 0; // Set based on selected difficulty
+let totalPairs = 0; // Determined by selected difficulty
 
 // =========================
 // Image Arrays for Each Difficulty
@@ -208,31 +211,23 @@ function startTimer() {
 }
 
 // =========================
-// Best Time Functions with Live Name Update (Firebase Integrated)
+// Best Time Functions (RTDB Integration with Live Name Update)
 // =========================
 function updateBestTime() {
   const difficulty = difficultySelect.value;
-  const docId = difficulty; // Use difficulty as document ID for simplicity
-  const highScoreRef = db.collection('highscores').doc(docId);
+  const scoreRef = dbRT.ref('highscores/' + difficulty);
   
-  highScoreRef.get().then(doc => {
-    if (doc.exists) {
-      const data = doc.data();
-      if (!data.score || timeElapsed < data.score) {
-        // New record: show input field for live name update
-        bestNameInput.style.display = 'block';
-        bestNameInput.value = '';
-        bestNameInput.focus();
-        bestNameInput.addEventListener('input', bestNameInputHandler);
-      } else {
-        displayBestTime();
-      }
-    } else {
-      // No record exists, so prompt for a new record
+  scoreRef.once('value').then(snapshot => {
+    const data = snapshot.val();
+    // If no record exists or current time is better (lower)
+    if (!data || timeElapsed < data.score) {
+      // Show live input field for best name update
       bestNameInput.style.display = 'block';
       bestNameInput.value = '';
       bestNameInput.focus();
       bestNameInput.addEventListener('input', bestNameInputHandler);
+    } else {
+      displayHighScore();
     }
   }).catch(error => {
     console.error("Error fetching high score:", error);
@@ -241,40 +236,37 @@ function updateBestTime() {
 
 function bestNameInputHandler() {
   const difficulty = difficultySelect.value;
-  const docId = difficulty;
-  const highScoreRef = db.collection('highscores').doc(docId);
+  const scoreRef = dbRT.ref('highscores/' + difficulty);
   
-  // Save the new best score and name live as the user types
-  highScoreRef.set({
+  // Save the new best score and name as the user types
+  scoreRef.set({
     name: bestNameInput.value,
     score: timeElapsed,
     difficulty: difficulty,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    timestamp: firebase.database.ServerValue.TIMESTAMP
   }).then(() => {
-    displayBestTime();
+    displayHighScore();
   }).catch(error => {
-    console.error("Error updating best score:", error);
+    console.error("Error updating high score:", error);
   });
   
-  // Optionally remove the listener after update (if not needed continuously)
   bestNameInput.removeEventListener('input', bestNameInputHandler);
 }
 
-function displayBestTime() {
+function displayHighScore() {
   const difficulty = difficultySelect.value;
-  const docId = difficulty;
-  const highScoreRef = db.collection('highscores').doc(docId);
+  const scoreRef = dbRT.ref('highscores/' + difficulty);
   
-  highScoreRef.get().then(doc => {
-    if (doc.exists) {
-      const data = doc.data();
+  scoreRef.once('value').then(snapshot => {
+    const data = snapshot.val();
+    if (data) {
       bestRecordElem.textContent = `Best: ${data.score}s by ${data.name}`;
     } else {
       bestRecordElem.textContent = "Best: N/A";
     }
     bestNameInput.style.display = 'none';
   }).catch(error => {
-    console.error("Error displaying best score:", error);
+    console.error("Error displaying high score:", error);
   });
 }
 
@@ -305,8 +297,7 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  // Display the best score for the current difficulty
-  displayBestTime();
+  displayHighScore(); // Update best score display
   
   const totalCards = parseInt(difficultySelect.value, 10);
   const cardValues = generateCards(totalCards);

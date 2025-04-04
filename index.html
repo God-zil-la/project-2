@@ -7,31 +7,35 @@
   <title>Memory Game</title>
   <link rel="stylesheet" href="assets/styles.css/styles.css">
 
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-    <!-- Firebase Firestore (compat version) -->
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
-  </head>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+  <!-- Firebase Realtime Database (compat version) -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+  <!-- Remove duplicate firebase-app-compat.js and firebase-firestore-compat.js if not used -->
+  
+</head>
 <body>
   <header>
     <h1>Memory Game</h1>
 
+    <!-- Inline styles for background image (if needed, consider moving these to your CSS file) -->
     <style>
-        body {
-          background-image: url('assets/images/background.jpg') !important;
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-        }
-      </style>
-      <style>
-        .card-front {
-          background-image: url('assets/images/background-card.jpg') !important;
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-        }
-      </style>
+      body {
+        background-image: url('assets/images/background.jpg') !important;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    </style>
+    <style>
+      .card-front {
+        background-image: url('assets/images/background-card.jpg') !important;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    </style>
+
     <!-- Game Info now moved into the header -->
     <div class="game-info">
       <p>Moves: <span id="movesCount">0</span></p>
@@ -46,7 +50,6 @@
       <button id="resetBtn">Reset Game</button>
       <input type="text" id="bestNameInput" placeholder="Enter your name" style="display: none; font-size: 1.8rem; padding: 0.3rem;" />
     </div>
-  
   </header>
 
   <main>
