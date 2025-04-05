@@ -74,6 +74,30 @@ const hardImages = [
   'assets/images/32-card/emoji-16.png'
 ];
 
+// Expert mode: 40 cards (20 pairs) - 20 unique images needed
+const expertImages = [
+  'assets/images/40-card/emoji-1.png',
+  'assets/images/40-card/emoji-2.png',
+  'assets/images/40-card/emoji-3.png',
+  'assets/images/40-card/emoji-4.png',
+  'assets/images/40-card/emoji-5.png',
+  'assets/images/40-card/emoji-6.png',
+  'assets/images/40-card/emoji-7.png',
+  'assets/images/40-card/emoji-8.png',
+  'assets/images/40-card/emoji-9.png',
+  'assets/images/40-card/emoji-10.png',
+  'assets/images/40-card/emoji-11.png',
+  'assets/images/40-card/emoji-12.png',
+  'assets/images/40-card/emoji-13.png',
+  'assets/images/40-card/emoji-14.png',
+  'assets/images/40-card/emoji-15.png',
+  'assets/images/40-card/emoji-16.png',
+  'assets/images/40-card/emoji-17.png',
+  'assets/images/40-card/emoji-18.png',
+  'assets/images/40-card/emoji-19.png',
+  'assets/images/40-card/emoji-20.png'
+];
+
 // =========================
 // Helper Function: Shuffle Array (Fisher-Yates)
 // =========================
@@ -86,7 +110,7 @@ function shuffleArray(array) {
 }
 
 // =========================
-// Generate Cards Based on Difficulty (8, 16, or 32 cards)
+// Generate Cards Based on Difficulty (8, 16, 32, or 40 cards)
 // =========================
 function generateCards(totalCards) {
   totalPairs = totalCards / 2;
@@ -97,10 +121,12 @@ function generateCards(totalCards) {
     values = normalImages.slice(0, totalPairs);
   } else if (totalCards === 32) {
     values = hardImages.slice(0, totalPairs);
+  } else if (totalCards === 40) {
+    values = expertImages.slice(0, totalPairs);
   } else {
     values = easyImages.slice(0, totalPairs);
   }
-  let cardValues = values.concat(values);
+  let cardValues = values.concat(values); // Duplicate to create pairs
   console.log("Generated card values:", cardValues);
   return shuffleArray(cardValues);
 }
@@ -209,7 +235,7 @@ function updateBestTime() {
     .then(snapshot => {
       const data = snapshot.val();
       console.log("Fetched high score data:", data);
-      // If no record exists or current time is better
+      // If no record exists or current time is better (lower)
       if (!data || timeElapsed < data.score) {
         bestNameInput.style.display = 'block';
         bestNameInput.value = '';
@@ -271,7 +297,7 @@ function displayHighScore() {
 // Desktop Layout Adjustments
 // =========================
 function applyDesktopLayout(totalCards) {
-  gameContainer.classList.remove('easy-desktop', 'normal-desktop', 'hard-desktop');
+  gameContainer.classList.remove('easy-desktop', 'normal-desktop', 'hard-desktop', 'expert-desktop');
   if (window.innerWidth >= 1200) {
     if (totalCards === 8) {
       gameContainer.classList.add('easy-desktop');
@@ -279,6 +305,8 @@ function applyDesktopLayout(totalCards) {
       gameContainer.classList.add('normal-desktop');
     } else if (totalCards === 32) {
       gameContainer.classList.add('hard-desktop');
+    } else if (totalCards === 40) {
+      gameContainer.classList.add('expert-desktop');
     }
   }
 }
@@ -294,6 +322,7 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
+  // Display current high score (if exists)
   displayHighScore();
   
   const totalCards = parseInt(difficultySelect.value, 10);
@@ -312,5 +341,5 @@ window.addEventListener('resize', () => {
 difficultySelect.addEventListener('change', initGame);
 resetBtn.addEventListener('click', initGame);
 
-// Start game when DOM is loaded
+// Start the game when DOM is loaded
 window.addEventListener('DOMContentLoaded', initGame);
