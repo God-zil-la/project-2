@@ -1,10 +1,6 @@
 // =========================
-// Firebase Initialization (RTDB Version using Compat SDK)
+// Firebase Initialization (RTDB using Compat SDK)
 // =========================
-// Include these scripts in your index.html before script.js:
-// <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-// <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
 const firebaseConfig = {
   apiKey: "AIzaSyBJ4xlHJ-gw1i-njOeuoX5shRtJ6G7vg8I",
   authDomain: "memory-b0d16.firebaseapp.com",
@@ -13,26 +9,22 @@ const firebaseConfig = {
   messagingSenderId: "1081029476081",
   appId: "1:1081029476081:web:0678dc8a912cd8f202b350",
   measurementId: "G-PXM46CJPCW",
-  // Add the correct database URL:
   databaseURL: "https://memory-b0d16-default-rtdb.europe-west1.firebasedatabase.app"
 };
 firebase.initializeApp(firebaseConfig);
-const dbRT = firebase.database(); // Realtime Database
+const dbRT = firebase.database();
 
 // =========================
-// Select DOM Elements
+// DOM Elements and Global Variables
 // =========================
 const gameContainer = document.getElementById('gameContainer');
 const movesCountElem = document.getElementById('movesCount');
 const timeCountElem = document.getElementById('timeCount');
 const bestRecordElem = document.getElementById('bestRecord');
-const bestNameInput = document.getElementById('bestNameInput'); // Input for live best name update
+const bestNameInput = document.getElementById('bestNameInput');
 const resetBtn = document.getElementById('resetBtn');
 const difficultySelect = document.getElementById('difficulty');
 
-// =========================
-// Global Game Variables
-// =========================
 let movesCount = 0;
 let timer;
 let timeElapsed = 0;
@@ -40,12 +32,11 @@ let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
 let matchedPairs = 0;
-let totalPairs = 0; // Determined by selected difficulty
+let totalPairs = 0; // Set based on difficulty
 
 // =========================
 // Image Arrays for Each Difficulty
 // =========================
-// Easy Mode: 4 unique images for 8 cards (4 pairs)
 const easyImages = [
   'assets/images/8-card/emoji-1.png',
   'assets/images/8-card/emoji-2.png',
@@ -86,7 +77,7 @@ const hardImages = [
 ];
 
 // =========================
-// Helper Function: Shuffle Array (Fisher-Yates)
+// Helper: Shuffle Array (Fisher-Yates)
 // =========================
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -97,7 +88,7 @@ function shuffleArray(array) {
 }
 
 // =========================
-// Generate Cards Based on Difficulty (8, 16, or 32 cards)
+// Generate Cards Based on Difficulty (8, 16, 32)
 // =========================
 function generateCards(totalCards) {
   totalPairs = totalCards / 2;
@@ -111,12 +102,13 @@ function generateCards(totalCards) {
   } else {
     values = easyImages.slice(0, totalPairs);
   }
-  let cardValues = values.concat(values); // Duplicate for pairs
+  let cardValues = values.concat(values);
+  console.log("Generated card values:", cardValues);
   return shuffleArray(cardValues);
 }
 
 // =========================
-// Render Cards into the Game Container
+// Render Cards
 // =========================
 function renderCards(cardValues) {
   gameContainer.innerHTML = '';
@@ -141,7 +133,6 @@ function renderCards(cardValues) {
     card.appendChild(cardInner);
     
     card.addEventListener('click', () => flipCard(card));
-    
     gameContainer.appendChild(card);
   });
 }
@@ -151,7 +142,6 @@ function renderCards(cardValues) {
 // =========================
 function flipCard(card) {
   if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-  
   card.classList.add('flipped');
   
   if (!firstCard) {
@@ -213,79 +203,71 @@ function startTimer() {
 // =========================
 // Best Time Functions (RTDB Integration with Live Name Update)
 // =========================
-// Listen for high score changes in realtime
-function listenForHighScore() {
-  const difficulty = difficultySelect.value;
-  const scoreRef = dbRT.ref('highscores/' + difficulty);
-
-  // Remove any previous listener (optional if you expect changes)
-  scoreRef.off();
-
-  // Set up a realtime listener
-  scoreRef.on('value', snapshot => {
-    const data = snapshot.val();
-    if (data) {
-      bestRecordElem.textContent = `Best: ${data.score}s by ${data.name}`;
-    } else {
-      bestRecordElem.textContent = "Best: N/A";
-    }
-  }, error => {
-    console.error("Error listening for high score:", error);
-  });
-}
-
+// We now use a keydown listener so that the input field stays until Enter is pressed.
 function updateBestTime() {
   const difficulty = difficultySelect.value;
   const scoreRef = dbRT.ref('highscores/' + difficulty);
   
-  scoreRef.once('value').then(snapshot => {
-    const data = snapshot.val();
-    if (!data || timeElapsed < data.score) {
-      bestNameInput.style.display = 'block';
-      bestNameInput.value = '';
-      bestNameInput.focus();
-      bestNameInput.addEventListener('input', bestNameInputHandler);
-    } else {
-      displayHighScore();
-    }
-  }).catch(error => {
-    console.error("Error fetching high score:", error);
-  });
+  scoreRef.once('value')
+    .then(snapshot => {
+      const data = snapshot.val();
+      console.log("Fetched high score data:", data);
+      // If no record exists or current time is better
+      if (!data || timeElapsed < data.score) {
+        bestNameInput.style.display = 'block';
+        bestNameInput.value = '';
+        bestNameInput.focus();
+        bestNameInput.addEventListener('keydown', bestNameKeyDownHandler);
+      } else {
+        displayHighScore();
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching high score:", error);
+    });
 }
 
-function bestNameInputHandler() {
-  const difficulty = difficultySelect.value;
-  const scoreRef = dbRT.ref('highscores/' + difficulty);
-  
-  scoreRef.set({
-    name: bestNameInput.value,
-    score: timeElapsed,
-    difficulty: difficulty,
-    timestamp: firebase.database.ServerValue.TIMESTAMP
-  }).then(() => {
-    displayHighScore();
-  }).catch(error => {
-    console.error("Error updating high score:", error);
-  });
-  
-  bestNameInput.removeEventListener('input', bestNameInputHandler);
+function bestNameKeyDownHandler(e) {
+  if (e.key === 'Enter') {
+    const difficulty = difficultySelect.value;
+    const scoreRef = dbRT.ref('highscores/' + difficulty);
+    
+    scoreRef.set({
+      name: bestNameInput.value,
+      score: timeElapsed,
+      difficulty: difficulty,
+      timestamp: firebase.database.ServerValue.TIMESTAMP
+    })
+    .then(() => {
+      displayHighScore();
+    })
+    .catch(error => {
+      console.error("Error updating high score:", error);
+    });
+    
+    bestNameInput.removeEventListener('keydown', bestNameKeyDownHandler);
+    bestNameInput.style.display = 'none';
+  }
 }
 
 function displayHighScore() {
   const difficulty = difficultySelect.value;
   const scoreRef = dbRT.ref('highscores/' + difficulty);
   
-  scoreRef.once('value').then(snapshot => {
-    const data = snapshot.val();
-    if (data) {
-      bestRecordElem.textContent = `Best: ${data.score}s by ${data.name}`;
-    } else {
-      bestRecordElem.textContent = "Best: N/A";
-    }
-    bestNameInput.style.display = 'none';
-  }).catch(error => {
-    console.error("Error displaying high score:", error);
-  });
+  scoreRef.once('value')
+    .then(snapshot => {
+      const data = snapshot.val();
+      console.log("Display high score data:", data);
+      if (data) {
+        bestRecordElem.textContent = `Best: ${data.score}s by ${data.name}`;
+      } else {
+        bestRecordElem.textContent = "Best: N/A";
+      }
+      bestNameInput.style.display = 'none';
+    })
+    .catch(error => {
+      console.error("Error displaying high score:", error);
+    });
 }
 
 // =========================
@@ -315,10 +297,7 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  // Start listening for high score changes
-  listenForHighScore();
-  
-  // Display the best score for the current difficulty
+  // Set up the realtime listener to display the current high score
   displayHighScore();
   
   const totalCards = parseInt(difficultySelect.value, 10);
@@ -337,5 +316,5 @@ window.addEventListener('resize', () => {
 difficultySelect.addEventListener('change', initGame);
 resetBtn.addEventListener('click', initGame);
 
-// Start the game when the DOM is fully loaded
+// Start the game when DOM is fully loaded
 window.addEventListener('DOMContentLoaded', initGame);

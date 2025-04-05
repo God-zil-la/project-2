@@ -9,7 +9,7 @@
 
 body {
   font-family: sans-serif;
-  background-image: url('https://via.placeholder.com/1920x1080');
+  background-image: url('../images/background.jpg') !important;
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -203,4 +203,17 @@ header h1 {
     font-size: 3.5rem;
   }
   /* Cards remain square; grid will auto-adjust if container expands */
+}
+
+/* Footer Styling */
+footer {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background: lightgray url('assets/images/background.jpg') repeat; /* Updated relative path */
+  color: orangered;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
