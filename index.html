@@ -2,21 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Essential for mobile responsiveness -->
+  <!-- Ensures proper scaling on all devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>How Good Is Memory</title>
+  <title>Memory Game</title>
   <link rel="stylesheet" href="assets/styles.css/styles.css">
 
-  <!-- Firebase App (the core Firebase SDK) -->
+  <!-- Firebase App and RTDB SDK (Compat version, loaded once) -->
   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-  <!-- Firebase Realtime Database (compat version) -->
   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-  <!-- Remove duplicate firebase-app-compat.js and firebase-firestore-compat.js if not used -->
-  
 </head>
 <body>
   <header>
-    <h1>Memory Game</h1>
+    <h1>How Good Is Your Memory?</h1>
 
     <!-- Inline styles for background image (if needed, consider moving these to your CSS file) -->
     <style>

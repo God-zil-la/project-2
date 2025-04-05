@@ -12,10 +12,10 @@ const firebaseConfig = {
   databaseURL: "https://memory-b0d16-default-rtdb.europe-west1.firebasedatabase.app"
 };
 firebase.initializeApp(firebaseConfig);
-const dbRT = firebase.database();
+const dbRT = firebase.database(); // Using Realtime Database
 
 // =========================
-// DOM Elements and Global Variables
+// DOM Elements & Global Variables
 // =========================
 const gameContainer = document.getElementById('gameContainer');
 const movesCountElem = document.getElementById('movesCount');
@@ -32,7 +32,7 @@ let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
 let matchedPairs = 0;
-let totalPairs = 0; // Set based on difficulty
+let totalPairs = 0; // Based on selected difficulty
 
 // =========================
 // Image Arrays for Each Difficulty
@@ -44,7 +44,6 @@ const easyImages = [
   'assets/images/8-card/emoji-4.png'
 ];
 
-// Normal Mode: 8 unique images for 16 cards (8 pairs)
 const normalImages = [
   'assets/images/16-card/emoji-1.png',
   'assets/images/16-card/emoji-2.png',
@@ -56,16 +55,15 @@ const normalImages = [
   'assets/images/16-card/emoji-8.png'
 ];
 
-// Hard Mode: 16 unique images for 32 cards (16 pairs)
 const hardImages = [
-  'assets/images/16-card/emoji-1.png',
-  'assets/images/16-card/emoji-2.png',
-  'assets/images/16-card/emoji-3.png',
-  'assets/images/16-card/emoji-4.png',
-  'assets/images/16-card/emoji-5.png',
-  'assets/images/16-card/emoji-6.png',
-  'assets/images/16-card/emoji-7.png',
-  'assets/images/16-card/emoji-8.png',
+  'assets/images/32-card/emoji-1.png',
+  'assets/images/32-card/emoji-2.png',
+  'assets/images/32-card/emoji-3.png',
+  'assets/images/32-card/emoji-4.png',
+  'assets/images/32-card/emoji-5.png',
+  'assets/images/32-card/emoji-6.png',
+  'assets/images/32-card/emoji-7.png',
+  'assets/images/32-card/emoji-8.png',
   'assets/images/32-card/emoji-9.png',
   'assets/images/32-card/emoji-10.png',
   'assets/images/32-card/emoji-11.png',
@@ -77,7 +75,7 @@ const hardImages = [
 ];
 
 // =========================
-// Helper: Shuffle Array (Fisher-Yates)
+// Helper Function: Shuffle Array (Fisher-Yates)
 // =========================
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -88,7 +86,7 @@ function shuffleArray(array) {
 }
 
 // =========================
-// Generate Cards Based on Difficulty (8, 16, 32)
+// Generate Cards Based on Difficulty (8, 16, or 32 cards)
 // =========================
 function generateCards(totalCards) {
   totalPairs = totalCards / 2;
@@ -108,7 +106,7 @@ function generateCards(totalCards) {
 }
 
 // =========================
-// Render Cards
+// Render Cards into the Game Container
 // =========================
 function renderCards(cardValues) {
   gameContainer.innerHTML = '';
@@ -201,9 +199,8 @@ function startTimer() {
 }
 
 // =========================
-// Best Time Functions (RTDB Integration with Live Name Update)
+// Best Time Functions (RTDB with Live Name Update using Enter Key)
 // =========================
-// We now use a keydown listener so that the input field stays until Enter is pressed.
 function updateBestTime() {
   const difficulty = difficultySelect.value;
   const scoreRef = dbRT.ref('highscores/' + difficulty);
@@ -297,7 +294,6 @@ function initGame() {
   clearInterval(timer);
   startTimer();
   
-  // Set up the realtime listener to display the current high score
   displayHighScore();
   
   const totalCards = parseInt(difficultySelect.value, 10);
@@ -316,5 +312,5 @@ window.addEventListener('resize', () => {
 difficultySelect.addEventListener('change', initGame);
 resetBtn.addEventListener('click', initGame);
 
-// Start the game when DOM is fully loaded
+// Start game when DOM is loaded
 window.addEventListener('DOMContentLoaded', initGame);

@@ -7,12 +7,18 @@
   box-sizing: border-box;
 }
 
-body {
+/* Prevent horizontal scrolling */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
   font-family: sans-serif;
+}
+
+body {
   background-image: url('../images/background.jpg') !important;
   background-size: cover;
   background-position: center;
-  width: 100%;
   color: orangered;
   padding: 1rem;
 }
@@ -52,8 +58,8 @@ header h1 {
 .game-info p {
   font-weight: bold;
   font-size: 2rem;
-  margin: 0rem;
-  color: orangered;  /* White text in header for contrast */
+  margin: 0;
+  color: orangered;
 }
 
 .game-info label {
@@ -99,7 +105,7 @@ header h1 {
   border: 2px solid #333;
   border-radius: 4px;
   width: 100%;
-  height: 100px; /* Mobile card height */
+  height: 100px;
   position: relative;
   perspective: 1000px;
   cursor: pointer;
@@ -121,9 +127,8 @@ header h1 {
   backface-visibility: hidden;
 }
 
-/* In your CSS file, if you're setting background images */
 .card-front {
-  background-image: url('assets/images/background-card.jpg');
+  background-image: url('../images/background-card.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -180,17 +185,13 @@ header h1 {
     font-size: 2rem;
   }
   /* Desktop layout: adjust grid based on difficulty */
-  /* Easy mode: 8 cards → 4 columns (2 rows) */
   .game-container.easy-desktop {
     grid-template-columns: repeat(4, 1fr);
   }
-  /* Normal mode: 16 cards → 8 columns (2 rows) */
-  /* Hard mode: 32 cards → 8 columns (4 rows) */
   .game-container.normal-desktop,
   .game-container.hard-desktop {
     grid-template-columns: repeat(8, 1fr);
   }
-  /* Make cards square using aspect ratio */
   .card {
     aspect-ratio: 1 / 1;
     height: auto;
@@ -202,14 +203,13 @@ header h1 {
   .game-info p {
     font-size: 3.5rem;
   }
-  /* Cards remain square; grid will auto-adjust if container expands */
 }
 
 /* Footer Styling */
 footer {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  background: lightgray url('assets/images/background.jpg') repeat; /* Updated relative path */
+  background: lightgray;
   color: orangered;
   text-align: center;
   padding: 1rem;
