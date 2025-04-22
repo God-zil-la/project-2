@@ -177,21 +177,28 @@ header h1 {
 @media (min-width: 1200px) {
   .game-container {
     width: 100%;
-    max-width: none;
-    margin: 0;
+    max-width: 1800px;
+    margin: 0 auto;
     padding: 1rem;
   }
   .game-info p {
     font-size: 2rem;
   }
-  /* Desktop layout: adjust grid based on difficulty */
-  .game-container.easy-desktop {
+   /* 8 cards → 4 columns (2 rows) */
+   .game-container.easy-desktop {
     grid-template-columns: repeat(4, 1fr);
   }
-  .game-container.normal-desktop,
+
+  /* 12 cards → 6 columns (2 rows) */
+  .game-container.normal-desktop {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* 24 cards → 8 columns (3 rows) */
   .game-container.hard-desktop {
     grid-template-columns: repeat(8, 1fr);
   }
+
   .card {
     aspect-ratio: 1 / 1;
     height: auto;
