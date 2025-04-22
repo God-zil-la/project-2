@@ -1,197 +1,125 @@
 /* =======================================================
-   GLOBAL RESET & BASE STYLES (Mobile-First)
+   Full‑bleed header & footer
 ======================================================= */
-* {
-  margin: 0;
-  padding: 0;
+header, footer {
+  position: relative;
+  width: 100%;
+  left: 0; right: 0;
+  background: lightgray;
+  color: orangered;
   box-sizing: border-box;
 }
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-  height: 100%;
-  font-family: sans-serif;
-}
-body {
-  background-image: url('../images/background.jpg') !important;
-  background-size: cover;
-  background-position: center;
-  color: orangered;
-  padding: 1rem;
-}
-
-/* limit overall width */
-body {
+header > .inner,
+footer > .inner {
   max-width: 1800px;
   margin: 0 auto;
+  padding: 1rem;
+
+  /* add these: */
+  text-align: center;
+  font-weight: bold;
 }
 
-/* HEADER & GAME INFO */
-header {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  background: lightgray;
+
+/* =======================================================
+   GLOBAL RESET & BASE
+======================================================= */
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { overflow-x:hidden; width:100%; height:100%; font-family:sans-serif; }
+body {
+  background: url('../images/background.jpg') center/cover no-repeat;
   color: orangered;
-  text-align: center;
-  padding: 1rem;
-  border: 4px solid lightgray;
 }
-header h1 {
-  font-size: 4rem;
-  margin-bottom: .5rem;
-}
+.visually-hidden { position:absolute; clip:rect(0 0 0 0); }
+
+/* =======================================================
+   GAME INFO
+======================================================= */
 .game-info {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  display:flex; flex-wrap:wrap;
+  gap:1rem; align-items:center; justify-content:center;
 }
-.game-info p,
-.game-info label {
-  font-weight: bold;
-  font-size: 2rem;
-  color: orangered;
+.game-info p, .game-info label {
+  font-size:2rem; font-weight:bold;
 }
-.game-info select {
-  padding: .3rem;
-  font-size: 1.8rem;
+.game-info select, .game-info button {
+  font-size:1.8rem; padding:.3rem .5rem;
 }
 .game-info button {
-  padding: .5rem 1rem;
-  font-size: 1.8rem;
-  background: orangered;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  background: orangered; border:none; border-radius:4px; cursor:pointer;
 }
-.game-info button:hover {
-  background: #e1ab25;
-}
-.hidden {
-  display: none;
-}
+.game-info button:hover { background:#e1ab25; }
+.hidden { display:none; }
 
-/* GAME CONTAINER & CARD GRID */
+/* =======================================================
+   BOARD & CARDS
+======================================================= */
 .game-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  padding: 1rem;
-  max-width: 1800px;
-  margin: 0 auto;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px,1fr));
+  gap:1rem; padding:1rem;
 }
-
-/* CARD STYLES */
 .card {
   background: orangered;
-  border: 2px solid #333;
-  border-radius: 4px;
-  width: 100%;
-  height: 100px;
-  position: relative;
-  perspective: 1000px;
-  cursor: pointer;
+  border:2px solid #333;
+  border-radius:4px;
+  aspect-ratio: 1/1;
+  position:relative;
+  perspective:1000px;
+  cursor:pointer;
 }
 .card-inner {
-  width: 100%;
-  height: 100%;
-  transition: transform .6s;
-  transform-style: preserve-3d;
+  width:100%; height:100%;
+  transform-style:preserve-3d;
+  transition:transform .6s;
 }
 .card-front, .card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  backface-visibility: hidden;
+  position:absolute; width:100%; height:100%;
+  backface-visibility:hidden; border-radius:4px;
 }
 .card-front {
-  background-image: url('../images/background-card.jpg');
-  background-size: cover;
-  background-position: center;
+  background: url('../images/background-card.jpg') center/cover no-repeat;
 }
 .card-back {
-  transform: rotateY(180deg);
-  background-size: cover;
-  background-position: center;
-  border: 2px solid #2b2f77;
+  transform:rotateY(180deg);
+  background-size:cover; background-position:center;
+  border:2px solid #2b2f77;
 }
-.flipped .card-inner {
-  transform: rotateY(180deg);
-}
-.matched {
-  opacity: .7;
-  cursor: default;
-}
+.flipped .card-inner { transform:rotateY(180deg); }
+.matched { opacity:.7; cursor:default; }
 
-/* MODAL */
+/* =======================================================
+   MODAL
+======================================================= */
 .modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  position:fixed; top:0; left:0; width:100vw; height:100vh;
+  background:rgba(0,0,0,.5);
+  display:flex; align-items:center; justify-content:center;
 }
-.modal.hidden {
-  display: none;
-}
+.modal.hidden { display:none; }
 .modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-}
-.modal-content p {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  background:#fff; padding:2rem; border-radius:8px; text-align:center;
+  color: orangered; max-width:90%; width:300px;
 }
 .modal-content button {
-  padding: .5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
+  margin-top:1rem; padding:.5rem 1rem; font-size:1.2rem;
+  background: orangered; border:none; border-radius:4px; cursor:pointer;
 }
+.modal-content button:hover { background:#e1ab25; }
 
-/* MEDIA QUERIES */
-@media (min-width: 768px) {
-  .game-container {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  }
-  .card { height: 120px; }
-  .game-info p { font-size: 2.2rem; }
+/* =======================================================
+   MEDIA QUERIES
+======================================================= */
+@media (min-width:768px){
+  .game-container { grid-template-columns: repeat(auto-fill,minmax(100px,1fr)); }
 }
-@media (min-width: 1200px) {
-  /* 8 cards → 2×4, 12 → 2×6, 24 → 3×8 */
-  .game-container.easy-desktop    { grid-template-columns: repeat(4, 1fr); }
-  .game-container.normal-desktop  { grid-template-columns: repeat(6, 1fr); }
-  .game-container.hard-desktop    { grid-template-columns: repeat(8, 1fr); }
-  .card {
-    aspect-ratio: 1/1;
-    height: auto;
-  }
+@media (min-width:1200px){
+  /* easy: 8 cards = 2×4; normal 12 & hard 24 = 2×6 / 4×6 */
+  .game-container.easy-desktop  { grid-template-columns: repeat(4,1fr); }
+  .game-container.normal-desktop,
+  .game-container.hard-desktop  { grid-template-columns: repeat(6,1fr); }
 }
-@media (min-width: 1920px) {
-  .game-info p { font-size: 3.5rem; }
-}
-
-/* FOOTER */
-footer {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  background: lightgray;
-  color: orangered;
-  text-align: center;
-  padding: 1rem;
-  margin-top: 2rem;
-  font-size: 1.8rem;
-  font-weight: bold;
+/* Very large screens */
+@media (min-width:1920px){
+  .game-info p, .game-info label { font-size:3.5rem; }
 }

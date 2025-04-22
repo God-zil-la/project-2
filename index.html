@@ -5,46 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Memory Game</title>
   <link rel="stylesheet" href="assets/css/styles.css"/>
-  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-
-  <!-- Firebase Compat SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+  <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
 </head>
 <body>
+
   <header>
-    <h1>How Good Is Your Memory?</h1>
-    <div class="game-info">
-      <p>Moves: <span id="movesCount">0</span></p>
-      <p>Time: <span id="timeCount">0</span>s</p>
-      <p id="bestRecord">Best: N/A</p>
-      <label for="difficulty">Difficulty:</label>
-      <select id="difficulty">
-        <option value="8" selected>Easy (8 cards)</option>
-        <option value="12">Normal (12 cards)</option>
-        <option value="24">Hard (24 cards)</option>
-      </select>
-      <button id="resetBtn">Reset Game</button>
-      <input type="text" id="bestNameInput" class="hidden" placeholder="Enter your name">
+    <div class="inner">
+      <h1>How Good Is Your Memory?</h1>
+      <div class="game-info">
+        <p>Moves: <span id="movesCount">0</span></p>
+        <p>Time: <span id="timeCount">0</span>s</p>
+        <p id="bestRecord">Best: N/A</p>
+
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty">
+          <option value="8" selected>Easy (8 cards)</option>
+          <option value="12">Normal (12 cards)</option>
+          <option value="24">Hard (24 cards)</option>
+        </select>
+
+        <button id="resetBtn">Reset Game</button>
+        <input type="text" id="bestNameInput" class="hidden" placeholder="Enter your name"/>
+      </div>
     </div>
   </header>
 
   <main>
-    <section class="game-container" id="gameContainer">
+    <section id="gameContainer" class="game-container">
       <h2 class="visually-hidden">Memory Game Board</h2>
+      <!-- cards go here -->
     </section>
   </main>
 
-  <!-- custom win modal -->
+  <!-- Win Modal -->
   <div id="winModal" class="modal hidden">
     <div class="modal-content">
-      <p id="winMessage"></p>
-      <button id="closeModal">Close</button>
+      <p id="winText">You win!</p>
+      <button id="playAgainBtn">Play Again</button>
     </div>
   </div>
 
   <footer>
-    <p>Developed by Mr.Husse</p>
+    <div class="inner">
+      <p>Developed by Mr.Husse</p>
+    </div>
   </footer>
 
   <script src="assets/js/script.js"></script>
