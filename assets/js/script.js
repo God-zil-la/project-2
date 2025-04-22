@@ -20,26 +20,26 @@ const easyImages   = [
   "assets/images/8-card/emoji-4.png"
 ];
 const normalImages = [
-  "assets/images/16-card/emoji-1.png",
-  "assets/images/16-card/emoji-2.png",
-  "assets/images/16-card/emoji-3.png",
-  "assets/images/16-card/emoji-4.png",
-  "assets/images/16-card/emoji-5.png",
-  "assets/images/16-card/emoji-6.png"
+  "assets/images/12-card/emoji-1.png",
+  "assets/images/12-card/emoji-2.png",
+  "assets/images/12-card/emoji-3.png",
+  "assets/images/12-card/emoji-4.png",
+  "assets/images/12-card/emoji-5.png",
+  "assets/images/12-card/emoji-6.png"
 ];
 const hardImages   = [
-  "assets/images/32-card/emoji-1.png",
-  "assets/images/32-card/emoji-2.png",
-  "assets/images/32-card/emoji-3.png",
-  "assets/images/32-card/emoji-4.png",
-  "assets/images/32-card/emoji-5.png",
-  "assets/images/32-card/emoji-6.png",
-  "assets/images/32-card/emoji-7.png",
-  "assets/images/32-card/emoji-8.png",
-  "assets/images/32-card/emoji-9.png",
-  "assets/images/32-card/emoji-10.png",
-  "assets/images/32-card/emoji-11.png",
-  "assets/images/32-card/emoji-12.png"
+  "assets/images/24-card/emoji-1.png",
+  "assets/images/24-card/emoji-2.png",
+  "assets/images/24-card/emoji-3.png",
+  "assets/images/24-card/emoji-4.png",
+  "assets/images/24-card/emoji-5.png",
+  "assets/images/24-card/emoji-6.png",
+  "assets/images/24-card/emoji-7.png",
+  "assets/images/24-card/emoji-8.png",
+  "assets/images/24-card/emoji-9.png",
+  "assets/images/24-card/emoji-10.png",
+  "assets/images/24-card/emoji-11.png",
+  "assets/images/24-card/emoji-12.png"
 ];
 
 let movesCount = 0,
