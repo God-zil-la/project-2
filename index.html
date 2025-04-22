@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Memory Game</title>
 
-  <!-- Link to your external CSS (make sure the path is correct) -->
+  <!-- Your external CSS -->
   <link rel="stylesheet" href="assets/css/styles.css" />
 
-  <!-- Load Firebase (Compat versions) BEFORE your custom script -->
+  <!-- Firebase (Compat) -->
   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 </head>
@@ -35,15 +35,23 @@
   <main>
     <section class="game-container" id="gameContainer">
       <h2 class="visually-hidden">Memory Game Board</h2>
-      <!-- Cards are dynamically inserted by script.js -->
     </section>
   </main>
+
+  <!-- Win Modal -->
+  <div id="winModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>You Win!</h2>
+      <p id="winMessage"></p>
+      <button id="modalCloseBtn">Play Again</button>
+    </div>
+  </div>
 
   <footer>
     <p>Developed by Mr.Husse</p>
   </footer>
 
-  <!-- Load your custom script LAST -->
-  <script src="assets/JavaScript/script.js"></script>
+  <!-- Your script last -->
+  <script src="assets/javascript/script.js"></script>
 </body>
 </html>
