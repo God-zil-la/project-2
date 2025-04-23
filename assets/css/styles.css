@@ -123,3 +123,18 @@ body {
 @media (min-width:1920px){
   .game-info p, .game-info label { font-size:3.5rem; }
 }
+
+/* constrain & center header/footer content */
+.inner {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 1rem;           /* your existing padding */
+  text-align: center;      /* center text */
+  font-weight: bold;       /* bold footer text */
+}
+
+/* also constrain & center the board on wide screens */
+.game-container {
+  max-width: 1800px;
+  margin: 0 auto;
+}
