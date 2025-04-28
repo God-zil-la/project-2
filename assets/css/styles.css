@@ -20,6 +20,11 @@ footer > .inner {
   font-weight: bold;
 }
 
+html {
+  position: relative;
+  min-height: 100%; /* Prevent horizontal scroll */
+}
+
 main {
   margin-bottom: 60px;
 }
