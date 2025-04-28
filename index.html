@@ -2,51 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Memory Game</title>
-  <link rel="stylesheet" href="assets/css/styles.css"/>
-  <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon"/>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="icon" href="assets/favicon/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-
   <header>
     <div class="inner">
       <h1>How Good Is Your Memory?</h1>
       <div class="game-info">
-        <p>Moves: <span id="movesCount">0</span></p>
-        <p>Time: <span id="timeCount">0</span>s</p>
+        <p>Moves: <span id="moves-count">0</span></p>
+        <p>Time: <span id="time-count">0</span>s</p>
 
-        <label for="difficulty">Difficulty:</label>
-        <select id="difficulty">
+        <label for="difficulty-select">Difficulty:</label>
+        <select id="difficulty-select">
           <option value="8" selected>Easy (8 cards)</option>
           <option value="12">Normal (12 cards)</option>
           <option value="24">Hard (24 cards)</option>
         </select>
 
-        <button id="resetBtn">Reset Game</button>
-        <input type="text" id="bestNameInput" class="hidden" placeholder="Enter your name"/>
+        <button id="reset-btn">Reset Game</button>
+        <input
+          type="text"
+          id="best-name-input"
+          class="hidden"
+          placeholder="Enter your name"
+        />
       </div>
     </div>
   </header>
 
   <main>
-    <section id="gameContainer" class="game-container">
+    <section id="game-container" class="game-container">
       <h2 class="visually-hidden">Memory Game Board</h2>
       <!-- cards go here -->
     </section>
   </main>
 
   <!-- Win Modal -->
-  <div id="winModal" class="modal hidden">
+  <div id="win-modal" class="modal hidden">
     <div class="modal-content">
-      <p id="winText">You win!</p>
-      <button id="playAgainBtn">Play Again</button>
+      <p id="win-text">You win!</p>
+      <button id="play-again-btn">Play Again</button>
     </div>
   </div>
 
   <footer>
     <div class="inner">
-      <p>Developed by Mr.Husse</p>
+      <p>Developed by Mr. Husse</p>
     </div>
   </footer>
 
